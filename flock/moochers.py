@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse_lazy
 
 from mooch.banktransfer import BankTransferMoocher
 from mooch.mail import render_to_mail
-from mooch.postfinance import PostfinanceMoocher
+from mooch.postFinance import PostFinanceMoocher
 from mooch.signals import post_charge
 from mooch.stripe import StripeMoocher
 
@@ -22,7 +22,7 @@ kw = {
 }
 
 if getattr(settings, 'POSTFINANCE_PSPID', None):
-    moocher = PostfinanceMoocher(**kw)
+    moocher = PostFinanceMoocher(**kw)
 
     moochers.append(moocher)
     urlpatterns.append(url(r'^postfinance/', include(moocher.urls)))
