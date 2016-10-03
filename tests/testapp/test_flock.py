@@ -130,7 +130,7 @@ class FlockTest(TestCase):
 
         self.assertIsNone(d.charged_at)
 
-        response = self.client.post('/banktransfer/', {
+        response = self.client.post('/banktransfer/confirm/', {
             'id': d.id.hex,
         })
 
@@ -358,7 +358,7 @@ class FlockTest(TestCase):
         ))
 
         ipn_data['SHASIGN'] = sha1(sha1_source.encode('utf-8')).hexdigest()
-        response = self.client.post('/postfinance/', ipn_data)
+        response = self.client.post('/postfinance/postsale/', ipn_data)
 
         self.assertEqual(
             response.status_code,

@@ -18,6 +18,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'testapp',
     'flock',
+    'mooch',
 ]
 
 MEDIA_ROOT = '/media/'

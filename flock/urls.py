@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.conf.urls import include, url
 
 from flock import views
 
@@ -20,23 +20,7 @@ urlpatterns = [
         name='flock_donate_payment_provider',
     ),
 
-    url(
-        r'^stripe/$',
-        views.donate_stripe,
-        name='flock_donate_stripe',
-    ),
-
-    url(
-        r'^postfinance/$',
-        views.donate_postfinance_postsale,
-        name='flock_postfinance_postsale',
-    ),
-
-    url(
-        r'^banktransfer/$',
-        views.donate_banktransfer,
-        name='flock_banktransfer',
-    ),
+    url(r'', include('flock.moochers', namespace='mooch')),
 
     url(
         r'^thanks/$',
