@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse_lazy
 
 from mooch.banktransfer import BankTransferMoocher
 from mooch.mail import render_to_mail
-from mooch.postFinance import PostFinanceMoocher
+from mooch.postfinance import PostFinanceMoocher
 from mooch.signals import post_charge
 from mooch.stripe import StripeMoocher
 
