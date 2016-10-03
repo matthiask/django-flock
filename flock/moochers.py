@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.conf.urls import include, url
+from django.core.urlresolvers import reverse_lazy
 
 from mooch.banktransfer import BankTransferMoocher
 from mooch.postfinance import PostfinanceMoocher
@@ -12,25 +13,25 @@ moochers = []
 app_name = 'mooch'
 urlpatterns = []
 
+kw = {
+    'model': Donation,
+    'success_url': reverse_lazy('flock_thanks'),
+    'failure_url': reverse_lazy('flock_fail'),
+}
+
 if getattr(settings, 'POSTFINANCE_PSPID', None):
-    moocher = PostfinanceMoocher(
-        model=Donation,
-    )
+    moocher = PostfinanceMoocher(**kw)
 
     moochers.append(moocher)
     urlpatterns.append(url(r'^postfinance/', include(moocher.urls)))
 
 if getattr(settings, 'STRIPE_PUBLISHABLE_KEY', None):
-    moocher = StripeMoocher(
-        model=Donation,
-    )
+    moocher = StripeMoocher(**kw)
 
     moochers.append(moocher)
     urlpatterns.append(url(r'^stripe/', include(moocher.urls)))
 
-moocher = BankTransferMoocher(
-    model=Donation,
-)
+moocher = BankTransferMoocher(**kw)
 
 moochers.append(moocher)
 urlpatterns.append(url(r'^banktransfer/', include(moocher.urls)))
