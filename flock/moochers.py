@@ -3,7 +3,9 @@ from django.conf.urls import include, url
 from django.core.urlresolvers import reverse_lazy
 
 from mooch.banktransfer import BankTransferMoocher
+from mooch.mail import render_to_mail
 from mooch.postfinance import PostfinanceMoocher
+from mooch.signals import post_charge
 from mooch.stripe import StripeMoocher
 
 from flock.models import Donation
@@ -37,4 +39,10 @@ moochers.append(moocher)
 urlpatterns.append(url(r'^banktransfer/', include(moocher.urls)))
 
 
-# TODO register a signal handler for sending out the old standard THANK YOU
+def send_thanks_mail(sender, payment, **kwargs):
+    render_to_mail('flock/thanks_mail', {
+        'donation': payment,
+    }, to=[payment.email]).send(fail_silently=True)
+
+
+post_charge.connect(send_thanks_mail)
