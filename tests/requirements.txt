@@ -1,3 +1,4 @@
 Django
 coverage
 requests
+https://github.com/matthiask/django-mooch/archive/master.zip
