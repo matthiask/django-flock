@@ -2,11 +2,13 @@
 flock - Simple crowdfunding
 ===========================
 
+.. image:: https://travis-ci.org/matthiask/django-flock.svg?branch=mooch
+   :target: https://travis-ci.org/matthiask/django-flock
+
 Usage
 =====
 
-This example assumes you are using a recent version of Django, jQuery and
-Twitter Bootstrap.
+You have to use Django 1.10 or better and Python 3.4 or better.
 
 1. Install ``django-flock`` using pip.
 
@@ -19,7 +21,8 @@ Twitter Bootstrap.
     POSTFINANCE_SHA1_IN = env('POSTFINANCE_SHA1_IN')
     POSTFINANCE_SHA1_OUT = env('POSTFINANCE_SHA1_OUT')
 
-3. Add ``flock`` to ``INSTALLED_APPS`` and include
-   ``flock.urls`` somewhere in your URLconf.
+3. Add ``flock`` and ``mooch`` (the payment gateway connectors are in
+   this module) to ``INSTALLED_APPS`` and include ``flock.urls``
+   somewhere in your URLconf.
 
 4. Presto.
