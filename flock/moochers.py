@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.conf.urls import include, url
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse_lazy
 
 from mooch.banktransfer import BankTransferMoocher
 from mooch.mail import render_to_mail
@@ -12,9 +12,6 @@ from flock.models import Donation
 
 
 moochers = []
-app_name = 'mooch'
-urlpatterns = []
-
 kw = {
     'model': Donation,
     'success_url': reverse_lazy('flock_thanks'),
@@ -22,21 +19,28 @@ kw = {
 }
 
 if getattr(settings, 'POSTFINANCE_PSPID', None):
-    moocher = PostFinanceMoocher(**kw)
-
-    moochers.append(moocher)
-    urlpatterns.append(url(r'^postfinance/', include(moocher.urls)))
+    moochers.append(PostFinanceMoocher(
+        pspid=settings.POSTFINANCE_PSPID,
+        live=settings.POSTFINANCE_LIVE,
+        sha1_in=settings.POSTFINANCE_SHA1_IN,
+        sha1_out=settings.POSTFINANCE_SHA1_OUT,
+        **kw))
 
 if getattr(settings, 'STRIPE_PUBLISHABLE_KEY', None):
-    moocher = StripeMoocher(**kw)
+    moochers.append(StripeMoocher(
+        publishable_key=settings.STRIPE_PUBLISHABLE_KEY,
+        secret_key=settings.STRIPE_SECRET_KEY,
+        **kw))
 
-    moochers.append(moocher)
-    urlpatterns.append(url(r'^stripe/', include(moocher.urls)))
+moochers.append(BankTransferMoocher(
+    autocharge=True,
+    **kw))
 
-moocher = BankTransferMoocher(**kw)
 
-moochers.append(moocher)
-urlpatterns.append(url(r'^banktransfer/', include(moocher.urls)))
+app_name = 'mooch'
+urlpatterns = [
+    url(r'', include(moocher.urls)) for moocher in moochers
+]
 
 
 def send_thanks_mail(sender, payment, **kwargs):

@@ -1,8 +1,8 @@
 import json
 
 from django.contrib import messages
-from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils.translation import ugettext as _
 
 from flock.forms import DonationAmountForm, DonationDetailsForm

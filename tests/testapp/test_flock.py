@@ -91,7 +91,7 @@ class FlockTest(TestCase):
         })
 
         d = Donation.objects.get()
-        url = 'http://testserver/details/%s/' % d.id.hex
+        url = '/details/%s/' % d.id.hex
 
         self.assertRedirects(
             response,
@@ -104,7 +104,7 @@ class FlockTest(TestCase):
             'remember_my_name': '',
         })
 
-        url = 'http://testserver/psp/%s/' % d.id.hex
+        url = '/psp/%s/' % d.id.hex
         self.assertRedirects(
             response,
             url,
@@ -130,16 +130,17 @@ class FlockTest(TestCase):
 
         self.assertIsNone(d.charged_at)
 
-        response = self.client.post('/banktransfer/confirm/', {
+        response = self.client.post('/banktransfer_confirm/', {
             'id': d.id.hex,
         })
+        self.assertEqual(response.status_code, 302)
 
         d.refresh_from_db()
         self.assertIsNotNone(d.charged_at)
 
         self.assertRedirects(
             response,
-            'http://testserver/thanks/',
+            '/thanks/',
         )
 
         self.assertEqual(
@@ -151,7 +152,7 @@ class FlockTest(TestCase):
 
         self.assertRedirects(
             response,
-            'http://testserver/',
+            '/',
         )
 
         self.assertListEqual(
@@ -257,7 +258,7 @@ class FlockTest(TestCase):
         })
 
         d = Donation.objects.get()
-        url = 'http://testserver/details/%s/' % d.id.hex
+        url = '/details/%s/' % d.id.hex
 
         self.assertRedirects(
             response,
@@ -358,7 +359,7 @@ class FlockTest(TestCase):
         ))
 
         ipn_data['SHASIGN'] = sha1(sha1_source.encode('utf-8')).hexdigest()
-        response = self.client.post('/postfinance/postsale/', ipn_data)
+        response = self.client.post('/postfinance_postsale/', ipn_data)
 
         self.assertEqual(
             response.status_code,
