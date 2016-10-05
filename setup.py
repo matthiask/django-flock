@@ -25,7 +25,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        # 'django-mooch',
+        'django-mooch',
     ],
     classifiers=[
         'Development Status :: 4 - Beta',
