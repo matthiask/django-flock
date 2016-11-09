@@ -44,9 +44,11 @@ urlpatterns = [
 
 
 def send_thanks_mail(sender, payment, **kwargs):
-    render_to_mail('flock/thanks_mail', {
-        'donation': payment,
-    }, to=[payment.email]).send(fail_silently=True)
+    # Check whether signal was meant for us:
+    if isinstance(payment, Donation):
+        render_to_mail('flock/thanks_mail', {
+            'donation': payment,
+        }, to=[payment.email]).send(fail_silently=True)
 
 
 post_charge.connect(send_thanks_mail)
