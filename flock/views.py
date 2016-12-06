@@ -11,10 +11,13 @@ from flock.moochers import moochers
 
 
 def donate_amount(request, form_class=DonationAmountForm):
-    project = Project.objects.current()
-
-    if not project:
-        return render(request, 'flock/no_project.html')
+    if request.GET.get('project'):
+        project = get_object_or_404(
+            Project.objects.active(), pk=request.GET['project'])
+    else:
+        project = Project.objects.current()
+        if not project:
+            return render(request, 'flock/no_project.html')
 
     kw = {'project': project, 'request': request}
 

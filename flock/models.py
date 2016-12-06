@@ -12,8 +12,11 @@ from django.utils.translation import ugettext_lazy as _, ugettext
 
 
 class ProjectManager(models.Manager):
+    def active(self):
+        return self.filter(is_active=True)
+
     def current(self):
-        return self.filter(is_active=True).order_by('created_at').first()
+        return self.active().order_by('created_at').first()
 
 
 @python_2_unicode_compatible
