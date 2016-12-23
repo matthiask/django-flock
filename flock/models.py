@@ -10,6 +10,8 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _, ugettext
 
+from mooch.models import Payment
+
 
 class ProjectManager(models.Manager):
     def active(self):
@@ -151,35 +153,11 @@ class Reward(models.Model):
 
 
 @python_2_unicode_compatible
-class Donation(models.Model):
-    id = models.UUIDField(
-        primary_key=True,
-        default=uuid.uuid4,
-        editable=False,
-    )
+class Donation(Payment):
     project = models.ForeignKey(
         Project,
         on_delete=models.PROTECT,
         verbose_name=_('project'),
-    )
-    created_at = models.DateTimeField(
-        _('created at'),
-        default=timezone.now,
-    )
-    charged_at = models.DateTimeField(
-        _('charged at'),
-        blank=True,
-        null=True,
-    )
-    amount = models.DecimalField(
-        _('amount'),
-        max_digits=10,
-        decimal_places=2,
-    )
-    payment_service_provider = models.CharField(
-        _('payment service provider'),
-        max_length=100,
-        blank=True,
     )
     selected_reward = models.ForeignKey(
         Reward,
@@ -194,17 +172,8 @@ class Donation(models.Model):
         _('full name'),
         max_length=200,
     )
-    email = models.EmailField(
-        _('email'),
-        max_length=254,
-    )
     postal_address = models.TextField(
         _('postal address'),
-        blank=True,
-    )
-
-    transaction = models.TextField(
-        _('transaction'),
         blank=True,
     )
 
